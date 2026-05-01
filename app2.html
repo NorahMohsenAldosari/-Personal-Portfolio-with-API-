@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Country Explorer</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+input {
+    padding: 10px;
+    width: 200px;
+}
+
+button {
+    padding: 10px;
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.card {
+    background: white;
+    margin: 20px auto;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Country Explorer 🌍</h2>
+
+<input id="search" placeholder="Enter country name">
+<button onclick="getCountry()">Search</button>
+
+<p id="loading"></p>
+
+<div id="result"></div>
+
+<script>
+function getCountry() {
+    let name = document.getElementById("search").value.trim();
+
+    if (name === "") return;
+
+    document.getElementById("loading").innerText = "Loading...";
+
+    fetch(`https://restcountries.com/v3.1/name/${name}`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("loading").innerText = "";
+
+        let country = data[0];
+
+        document.getElementById("result").innerHTML = `
+            <div class="card">
+                <h3>${country.name.common}</h3>
+                <p><strong>Capital:</strong> ${country.capital}</p>
+                <p><strong>Region:</strong> ${country.region}</p>
+                <img src="${country.flags.png}" width="100">
+            </div>
+        `;
+    })
+    .catch(() => {
+        document.getElementById("loading").innerText = "";
+        document.getElementById("result").innerHTML = "❌ Country not found";
+    });
+}
+</script>
+
+</body>
+</html>
